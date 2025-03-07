@@ -1,4 +1,4 @@
-[English](README.md) | [日本語](#YouTube-Upload-Date-Viewer-JP)
+[English](#YouTube-Upload-Date-Viewer-EN) | [日本語](#YouTube-Upload-Date-Viewer-JP)
 
 # YouTube Upload Date Viewer [EN]
 
