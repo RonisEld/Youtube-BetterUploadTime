@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>YouTube Upload Date Viewer 設定</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 20px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    h1 {
+      font-size: 1.5em;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    .option-group {
+      margin-bottom: 20px;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+    }
+    .option-title {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    label {
+      display: block;
+      margin: 10px 0;
+    }
+    button {
+      background-color: #4285f4;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    button:hover {
+      background-color: #3367d6;
+    }
+    .status {
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 4px;
+      display: none;
+    }
+    .success {
+      background-color: #d4edda;
+      color: #155724;
+    }
+  </style>
+</head>
+<body>
+  <h1>YouTube Upload Date Viewer 設定</h1>
+  
+  <div class="option-group">
+    <div class="option-title">表示言語</div>
+    <label>
+      <input type="radio" name="language" value="japanese" checked> 日本語表記 (例: 2023/01/01 (日) 12:00)
+    </label>
+    <label>
+      <input type="radio" name="language" value="english"> 英語表記 (例: Jan 1, 2023 12:00 PM)
+    </label>
+  </div>
+
+  <button id="save">設定を保存</button>
+  
+  <div id="status" class="status"></div>
+
+  <script src="options.js"></script>
+</body>
+</html> 

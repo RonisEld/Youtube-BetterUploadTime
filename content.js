@@ -1,5 +1,39 @@
 // YouTubeの動画アップロード時間を実際の日付で表示するスクリプト
 
+// 言語設定（デフォルトは日本語）
+let displayLanguage = 'japanese';
+
+// 設定を読み込む
+function loadSettings() {
+  chrome.storage.sync.get({
+    language: 'japanese' // デフォルト値
+  }, (items) => {
+    displayLanguage = items.language;
+    // 設定が変更された場合、既存の日付表示を更新
+    updateExistingDateElements();
+  });
+}
+
+// 既存の日付表示を更新する
+function updateExistingDateElements() {
+  const dateElements = document.querySelectorAll('.youtube-upload-date-viewer');
+  dateElements.forEach(element => {
+    const dateObj = new Date(element.dataset.timestamp);
+    element.textContent = ` (${formatDate(dateObj)})`;
+  });
+}
+
+// 設定の変更を監視
+chrome.storage.onChanged.addListener((changes, namespace) => {
+  if (namespace === 'sync' && changes.language) {
+    displayLanguage = changes.language.newValue;
+    updateExistingDateElements();
+  }
+});
+
+// 初期設定の読み込み
+loadSettings();
+
 // MutationObserverを使用してDOMの変更を監視
 const observer = new MutationObserver((mutations) => {
   // 変更があった場合に処理を実行
@@ -42,6 +76,8 @@ function findAndUpdateUploadDates() {
       dateElement.style.color = '#aaa';
       dateElement.style.marginLeft = '4px';
       dateElement.style.fontSize = '0.85em'; // フォントサイズを小さく設定
+      dateElement.className = 'youtube-upload-date-viewer';
+      dateElement.dataset.timestamp = estimatedDate.toISOString(); // 日付を保存
       
       // 元の要素の後に追加
       element.parentNode.insertBefore(dateElement, element.nextSibling);
@@ -121,20 +157,35 @@ function estimateDateFromRelativeTime(relativeTime) {
 }
 
 /**
- * 日付を「yyyy/mm/dd (曜日) hh:mm」形式でフォーマットする関数
+ * 日付を設定に基づいてフォーマットする関数
  * @param {Date} date - フォーマットする日付オブジェクト
  * @return {string} - フォーマットされた日付文字列
  */
 function formatDate(date) {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  const hours = String(date.getHours()).padStart(2, '0');
-  const minutes = String(date.getMinutes()).padStart(2, '0');
-  
-  // 曜日の配列（日本語）
-  const weekdays = ['日', '月', '火', '水', '木', '金', '土'];
-  const weekday = weekdays[date.getDay()];
-  
-  return `${year}/${month}/${day} (${weekday}) ${hours}:${minutes}`;
+  if (displayLanguage === 'japanese') {
+    // 日本語形式: yyyy/mm/dd (曜日) hh:mm
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    
+    // 曜日の配列（日本語）
+    const weekdays = ['日', '月', '火', '水', '木', '金', '土'];
+    const weekday = weekdays[date.getDay()];
+    
+    return `${year}/${month}/${day} (${weekday}) ${hours}:${minutes}`;
+  } else {
+    // 英語形式: MMM D, YYYY h:mm A
+    const options = { 
+      year: 'numeric', 
+      month: 'short', 
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true
+    };
+    
+    return date.toLocaleString('en-US', options);
+  }
 } 

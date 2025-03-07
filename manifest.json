@@ -3,11 +3,15 @@
   "name": "YouTube Upload Date Viewer",
   "version": "1.0",
   "description": "YouTubeの動画の相対的な時間表示の隣に実際のアップロード日時を表示します",
-  "permissions": ["activeTab"],
+  "permissions": ["activeTab", "storage"],
   "content_scripts": [
     {
       "matches": ["*://*.youtube.com/*"],
       "js": ["content.js"]
     }
-  ]
+  ],
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": false
+  }
 } 
